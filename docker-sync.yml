@@ -1,0 +1,21 @@
+options:
+    compose-file-path: './docker-compose.yml'
+    compose-dev-file-path: './docker-compose-dev.yml'
+    verbose: true
+
+version: '2'
+syncs:
+    laravel-docker-vendor-sync:
+        src: './vendor/'
+        sync_strategy: 'rsync'
+        sync_args: '--delete'
+        sync_host_port: 10872
+        sync_excludes: ["bin/"]
+        notify_terminal: true
+    laravel-docker-app-sync:
+        src: './'
+        sync_host_port: 10877
+        sync_userid: '33'
+        sync_args: '-prefer newer -copyonconflict'
+        sync_excludes: ["vendor", ".idea", ".git"]
+        notify_terminal: true

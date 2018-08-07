@@ -1,0 +1,41 @@
+version: "3"
+services:
+    php:
+        external_links:
+        - mysql_db_1:db
+        networks:
+        - default
+        - mysql_default
+        volumes:
+        - laravel-docker-vendor-sync:/opt/vendor:nocopy
+        - laravel-docker-app-sync:/opt:nocopy
+        environment:
+            XDEBUG_CONFIG: "remote_host=192.168.31.231"
+            PHP_IDE_CONFIG: "serverName=docker"
+    nginx:
+        external_links:
+        - nginx-proxy_nginx-proxy_1:nginx-proxy
+        links:
+        - php
+        depends_on:
+        - php
+        networks:
+        - default
+        - nginx-proxy_default
+        expose:
+        - 80
+        volumes:
+        - laravel-docker-vendor-sync:/opt/vendor:nocopy
+        - laravel-docker-app-sync:/opt:nocopy
+networks:
+    mysql_default:
+        external: true
+    nginx-proxy_default:
+        external: true
+volumes:
+    laravel-docker-vendor-sync:
+        external: true
+    laravel-docker-app-sync:
+        external: true
+    mysql-data:
+        external: true
